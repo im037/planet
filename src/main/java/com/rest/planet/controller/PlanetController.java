@@ -17,7 +17,7 @@ public class PlanetController {
     public Integer apparitions(@PathVariable("planetName") String planetName) {
         // Return some cliched textual content
         //Integer countApparitions = apparitionsService.countApparitionsByFilms(planetName);
-        return apparitionsService.countApparitionsByFilms(planetName);
+        return apparitionsService.countApparitionsByPlanet(planetName);
     }
 
     @RequestMapping(path = "/add", method = RequestMethod.POST)
