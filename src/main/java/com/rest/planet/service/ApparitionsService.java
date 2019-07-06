@@ -30,24 +30,28 @@ public class ApparitionsService {
         return this.externalBaseUrl + this.externalResourcePlanet + this.externalResourceSearch;
     }
 
+    private Response executeExternalUrlMethodGet(String externalUrl) throws Exception {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(externalUrl).get().build();
+        return client.newCall(request).execute();
+    }
+
     public Integer countApparitionsByPlanet(String planetName){
 
         String externalUrl = this.buildExternalUrl() + planetName;
         Integer countApparitions = 0;
 
         try {
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder().url(externalUrl).get().build();
-            Response response = client.newCall(request).execute();
+            Response response = executeExternalUrlMethodGet(externalUrl);
 
             if(response.isSuccessful()) {
-                ObjectMapper mapper = new ObjectMapper();
-                SwapiResponse swapiResponse = mapper.readValue(response.body().bytes(), SwapiResponse.class);
+                SwapiResponse swapiResponse = SwapiResponse.buildSwapiResponse(response.body().bytes());
 
                 if(swapiResponse.getCount() > 0) {
                     List<SwapiPlanet> swapiPlanetList = swapiResponse.getResults();
                     for (SwapiPlanet swapiPlanet : swapiPlanetList) {
-                        countApparitions=+swapiPlanet.getFilms().size();
+                        if(swapiPlanet.getName().equals(planetName))
+                            countApparitions = swapiPlanet.getApparitions();
                     }
                 }
             }
