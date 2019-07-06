@@ -17,6 +17,7 @@ public class SwapiPlanet {
     private List<String> films;
     private String created;
     private String edited;
+    private String url;
 
     public String getName() {
         return name;
@@ -129,8 +130,6 @@ public class SwapiPlanet {
     public void setUrl(String url) {
         this.url = url;
     }
-
-    private String url;
 
     public Integer getApparitions(){
         return this.getFilms().size();
