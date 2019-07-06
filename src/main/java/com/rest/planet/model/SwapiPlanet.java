@@ -131,4 +131,8 @@ public class SwapiPlanet {
     }
 
     private String url;
+
+    public Integer getApparitions(){
+        return this.getFilms().size();
+    }
 }
