@@ -38,8 +38,9 @@ public class ApparitionsService {
 
     public Integer countApparitionsByPlanet(String planetName){
 
-        String externalUrl = this.buildExternalUrl() + planetName;
         Integer countApparitions = 0;
+
+        String externalUrl = this.buildExternalUrl() + planetName;
 
         try {
             Response response = executeExternalUrlMethodGet(externalUrl);
