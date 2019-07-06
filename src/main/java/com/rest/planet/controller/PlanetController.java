@@ -1,6 +1,5 @@
 package com.rest.planet.controller;
 
-import com.rest.planet.service.ApparitionsService;
 import com.rest.planet.service.PlanetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +19,7 @@ public class PlanetController {
     }
 
     @RequestMapping(path = "/add", method = RequestMethod.POST)
-    public Map addPlanet(Map body) {
+    public Map addPlanet(@RequestBody Map body) {
         return planetService.addPlanet(body);
     }
 

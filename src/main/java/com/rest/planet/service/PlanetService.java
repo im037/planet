@@ -12,7 +12,7 @@ public class PlanetService {
     private ApparitionsService apparitionsService;
 
     public Map addPlanet(Map body) {
-        body.put("apparitons", apparitionsService.countApparitionsByPlanet((String) body.get("name")));
+        body.put("apparitions", apparitionsService.countApparitionsByPlanet((String) body.get("nome")));
         return body;
     }
 
