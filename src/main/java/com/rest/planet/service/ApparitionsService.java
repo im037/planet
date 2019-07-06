@@ -1,15 +1,16 @@
 package com.rest.planet.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rest.planet.model.SwapiPlanet;
+import com.rest.planet.model.SwapiResponse;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import java.util.List;
 
 @Service
 @PropertySource("classpath:application.properties")
@@ -24,77 +25,34 @@ public class ApparitionsService {
     @Value("${external.resource.search}")
     private String externalResourceSearch;
 
-    private String getExternalUrlResourceSearch() {
-        //https://swapi.co/api/planets/?search=
+    //https://swapi.co/api/planets/?search=
+    private String buildExternalUrl() {
         return this.externalBaseUrl + this.externalResourcePlanet + this.externalResourceSearch;
     }
 
-    public Integer countApparitionsByPlanet(String planetName){// throws Exception {
+    public Integer countApparitionsByPlanet(String planetName){
 
-        String url = this.getExternalUrlResourceSearch() + planetName;
+        String externalUrl = this.buildExternalUrl() + planetName;
         Integer countApparitions = 0;
 
         try {
             OkHttpClient client = new OkHttpClient();
-
-            Request request = new Request.Builder()
-                    .url(url).get().build();
-
+            Request request = new Request.Builder().url(externalUrl).get().build();
             Response response = client.newCall(request).execute();
 
             if(response.isSuccessful()) {
-
                 ObjectMapper mapper = new ObjectMapper();
+                SwapiResponse swapiResponse = mapper.readValue(response.body().bytes(), SwapiResponse.class);
 
-                Map mapResult = mapper.readValue(response.body().bytes(), Map.class);
-
-//                result = {LinkedHashMap@9599}  size = 4
-//                "count" -> {Integer@7781} 0
-//                "next" -> null
-//                "previous" -> null
-//                "results" -> {ArrayList@9608}  size = 0
-                //if(mapResult)
-                countApparitions=3;
-                /*if(swapiPlanetResponseBody.count > 0) {
-
-                    List<SwapiPlanet> swapiPlanetList = swapiPlanetResponseBody.getResults();
-
-                    externalPlanet = swapiPlanetList.get(0);
-
-                    return externalPlanet;
-
-                } else {
-
-                    throw new SwapiValidationException(
-                            HttpStatus.NOT_FOUND,
-                            "Planeta inexistente na API Star Wars"
-                    );
+                if(swapiResponse.getCount() > 0) {
+                    List<SwapiPlanet> swapiPlanetList = swapiResponse.getResults();
+                    for (SwapiPlanet swapiPlanet : swapiPlanetList) {
+                        countApparitions=+swapiPlanet.getFilms().size();
+                    }
                 }
-                */
-            } else {
-                /*throw new SwapiValidationException(
-                        HttpStatus.valueOf(response.code()),
-                        response.message()
-                );*/
-                countApparitions=6;
             }
-
-        /*} catch (SwapiValidationException SwapiException) {
-
-            throw new SwapiValidationException(
-                    SwapiException.getHttpStatus(),
-                    SwapiException.getMessage(),
-                    SwapiException
-            );
-        */
-        }  catch (Exception exception) {
-
-            /*throw new SwapiValidationException(
-                    HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Erro interno ao consultar a API Star Wars",
-                    exception
-            );*/
-            countApparitions=9;
+        } catch (Exception exception) {
+            exception.printStackTrace();
         }
         return countApparitions;
     }
