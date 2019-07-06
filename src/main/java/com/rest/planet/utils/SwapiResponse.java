@@ -1,4 +1,4 @@
-package com.rest.planet.model;
+package com.rest.planet.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

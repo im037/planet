@@ -1,8 +1,7 @@
 package com.rest.planet.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rest.planet.model.SwapiPlanet;
-import com.rest.planet.model.SwapiResponse;
+import com.rest.planet.utils.SwapiPlanet;
+import com.rest.planet.utils.SwapiResponse;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
