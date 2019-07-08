@@ -76,7 +76,7 @@ public class PlanetTest {
     @Test
     public void deleteHothShouldPersistData(){
         Planet planet = new Planet("Hoth", "frozen",
-                "tundra, ice caves, mountain ranges", 3);
+                "tundra, ice caves, mountain ranges", 1);
 
         Planet planetSaved = planetRepository.save(planet);
         planetRepository.delete(planetSaved);
