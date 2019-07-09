@@ -61,12 +61,18 @@ public class PlanetService {
     }
 
     private Planet findByIdOrName(String nameOrId){
-        Planet planet = planetRepository.findByName(nameOrId);
-        if(planet == null) {
-            planet = findById(nameOrId);
+        try {
+            Planet planet = planetRepository.findByName(nameOrId);
+            if (planet == null) {
+                planet = findById(nameOrId);
+            }
+            return planet;
+        } catch (IllegalArgumentException iae) {
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-
-        return planet;
     }
 
     public Map translateFields(Map<String, String> body){
