@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -50,7 +53,9 @@ public class PlanetController {
 
         try {
             Planet planet = planetService.createPlanet(body);
-            planetResponse.setPlanet(planet);
+            List<Planet> planetList = new ArrayList<>();
+            planetList.add(planet);
+            planetResponse.setPlanets(planetList);
             planetResponse.setDescription("Planeta Criado com Sucesso");
             return ResponseEntity.status(HttpStatus.OK).body(planetResponse);
         } catch (DuplicateKeyException dke){
@@ -65,22 +70,37 @@ public class PlanetController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(planetResponse);
         }
     }
-    /*
+
     @RequestMapping(path = "/{name}", method = RequestMethod.GET)
     public ResponseEntity getByName(@PathVariable("name") String name) {
-        return planetService.findByName(name);
+        PlanetResponse planetResponse = new PlanetResponse();
+
+        try {
+            Planet planet = planetService.findByName(name);
+            return responseForNameOrId(planet, name);
+        } catch (Exception e) {
+            planetResponse.setDescription("Erro ao processar sua requisição");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(planetResponse);
+        }
     }
 
     @RequestMapping(path = "/findByName/{name}", method = RequestMethod.GET)
     public ResponseEntity findByName(@PathVariable("name") String name) {
-        return planetService.findByName(name);
+        return getByName(name);
     }
-
     @RequestMapping(path = "/findById/{planetId}", method = RequestMethod.GET)
     public ResponseEntity findById(@PathVariable("planetId") String planetId) {
-        return planetService.findById(planetId);
+        PlanetResponse planetResponse = new PlanetResponse();
+
+        try {
+            Planet planet = planetService.findById(planetId);
+            return responseForNameOrId(planet, planetId);
+        } catch (Exception e) {
+            planetResponse.setDescription("Erro ao processar sua requisição");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(planetResponse);
+        }
     }
-    */
+
     @RequestMapping(path = "/{name}", method = RequestMethod.DELETE)
     public ResponseEntity deletePlanet(@PathVariable("name") String name) {
 
@@ -88,11 +108,27 @@ public class PlanetController {
 
         Planet planet = planetService.deletePlanet(name);
         if(planet != null){
-            planetResponse.setPlanet(planet);
+            List<Planet> planetList = new ArrayList<>();
+            planetList.add(planet);
+            planetResponse.setPlanets(planetList);
             planetResponse.setDescription("Planeta Deletado com Sucesso");
             return ResponseEntity.status(HttpStatus.OK).body(planetResponse);
         } else {
             planetResponse.setDescription("Nenhum Planeta Encontrado com este Nome");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(planetResponse);
+        }
+    }
+
+    private ResponseEntity responseForNameOrId(Planet planet, String nameOrId){
+        PlanetResponse planetResponse = new PlanetResponse();
+        if(planet != null){
+            List<Planet> planetList = new ArrayList<>();
+            planetList.add(planet);
+            planetResponse.setPlanets(planetList);
+            planetResponse.setDescription(planet.getName());
+            return ResponseEntity.status(HttpStatus.OK).body(planetResponse);
+        } else {
+            planetResponse.setDescription("Planeta " + nameOrId + " não encontrado");
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(planetResponse);
         }
     }
