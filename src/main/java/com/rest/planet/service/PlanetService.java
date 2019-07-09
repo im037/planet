@@ -25,7 +25,6 @@ public class PlanetService {
 
         newBodyMap.put("apparitions", apparitionsService.countApparitionsByPlanet((String) newBodyMap.get("name")));
 
-
         Gson gson = new Gson();
         String json = gson.toJson(newBodyMap);
 
