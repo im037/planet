@@ -52,11 +52,20 @@ public class PlanetService {
         return findById(new ObjectId(planetId));
     }
 
-    public Planet deletePlanet(String name) {
-        Planet planet = planetRepository.findByName(name);
+    public Planet deletePlanet(String nameOrId) {
+        Planet planet = findByIdOrName(nameOrId);
         if(planet != null) {
             planetRepository.delete(planet);
         }
+        return planet;
+    }
+
+    private Planet findByIdOrName(String nameOrId){
+        Planet planet = planetRepository.findByName(nameOrId);
+        if(planet == null) {
+            planet = findById(nameOrId);
+        }
+
         return planet;
     }
 
