@@ -15,6 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.validation.ConstraintViolationException;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -59,6 +61,15 @@ public class PlanetTest {
         Planet planetSaved = planetRepository.save(planet);
 
         assertThat(planet.getId()).isEqualTo(planetSaved.getId());
+    }
+
+    @Test
+    public void createHothShouldConstraintsViolation(){
+        expectedException.expect(ConstraintViolationException.class);
+        Planet planet = new Planet();
+        planet.setName("Hoth");
+
+        Planet planetSaved = planetRepository.save(planet);
     }
 
     @Test

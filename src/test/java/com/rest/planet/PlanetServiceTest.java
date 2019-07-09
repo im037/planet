@@ -1,11 +1,9 @@
 package com.rest.planet;
 
-import com.google.gson.Gson;
 import com.rest.planet.domain.Planet;
 import com.rest.planet.repository.PlanetRepository;
 import com.rest.planet.service.ApparitionsService;
 import com.rest.planet.service.PlanetService;
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -15,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +57,16 @@ public class PlanetServiceTest {
         assertThat(body.get("climate")).isEqualTo("Temperado");
         assertThat(body.get("terreno")).isNull();
         assertThat(body.get("terrain")).isEqualTo("Florestal");
+    }
+
+    @Test
+    public void createPlanetShouldConstraintsViolation() throws Exception{
+        expectedException.expect(ConstraintViolationException.class);
+        String planetName = "Terra";
+        Map body = new HashMap<String, String>();
+        body.put("nome", planetName);
+
+        Planet planet = planetService.createPlanet(body);
     }
 
     @Test
