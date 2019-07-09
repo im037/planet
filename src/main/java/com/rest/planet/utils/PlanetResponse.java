@@ -10,8 +10,6 @@ public class PlanetResponse {
 
     private List<Planet> planets;
 
-    private Planet planet;
-
     private Integer totalCount;
 
     public PlanetResponse() {}
@@ -31,14 +29,6 @@ public class PlanetResponse {
     public void setPlanets(List<Planet> planets) {
         this.planets = planets;
         this.totalCount = planets.size();
-    }
-
-    public Planet getPlanet() {
-        return planet;
-    }
-
-    public void setPlanet(Planet planet) {
-        this.planet = planet;
     }
 
     public Integer getTotalCount() {
