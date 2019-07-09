@@ -19,6 +19,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * RestController to access game B2w
+ *
+ * @author leonardo.souza
+ *
+ * return <ResponseEntity> for all methods in this class
+ */
 @RequestMapping("/planet")
 @RestController
 public class PlanetController {
@@ -26,6 +34,10 @@ public class PlanetController {
     @Autowired
     private PlanetService planetService;
 
+
+    /**
+     * get all Planets in Database
+     */
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity findAll() {
 
@@ -47,6 +59,14 @@ public class PlanetController {
         }
     }
 
+    /**
+     * create Planet in Database
+     *
+     * @param body is a {@link Map} collection that contains {@link String} as key
+     * and {@link String} as value.
+     *
+     * keys can be only {"nome", "terreno", "clima"} or {"name", "terrain", "climate"}
+     */
     @RequestMapping(path = "/add", method = RequestMethod.POST)
     public ResponseEntity createPlanet(@RequestBody Map body) {
         PlanetResponse planetResponse = new PlanetResponse();
@@ -71,6 +91,12 @@ public class PlanetController {
         }
     }
 
+    /**
+     * Find Planet in Database
+     *
+     * @param name is a {@link String} to find Planet by Name
+     *
+     */
     @RequestMapping(path = "/{name}", method = RequestMethod.GET)
     public ResponseEntity getByName(@PathVariable("name") String name) {
         PlanetResponse planetResponse = new PlanetResponse();
@@ -84,10 +110,23 @@ public class PlanetController {
         }
     }
 
+    /**
+     * Find Planet in Database
+     *
+     * @param name is a {@link String} to find Planet by Name
+     *
+     */
     @RequestMapping(path = "/findByName/{name}", method = RequestMethod.GET)
     public ResponseEntity findByName(@PathVariable("name") String name) {
         return getByName(name);
     }
+
+    /**
+     * Find Planet in Database
+     *
+     * @param planetId is a {@link String} to find Planet by ID
+     *
+     */
     @RequestMapping(path = "/findById/{planetId}", method = RequestMethod.GET)
     public ResponseEntity findById(@PathVariable("planetId") String planetId) {
         PlanetResponse planetResponse = new PlanetResponse();
@@ -101,12 +140,18 @@ public class PlanetController {
         }
     }
 
-    @RequestMapping(path = "/{name}", method = RequestMethod.DELETE)
-    public ResponseEntity deletePlanet(@PathVariable("name") String name) {
+    /**
+     * Delete Planet in Database
+     *
+     * @param nameOrId is a {@link String} to delete Planet by name or ID
+     *
+     */
+    @RequestMapping(path = "/{nameOrId}", method = RequestMethod.DELETE)
+    public ResponseEntity deletePlanet(@PathVariable("nameOrId") String nameOrId) {
 
         PlanetResponse planetResponse = new PlanetResponse();
 
-        Planet planet = planetService.deletePlanet(name);
+        Planet planet = planetService.deletePlanet(nameOrId);
         if(planet != null){
             List<Planet> planetList = new ArrayList<>();
             planetList.add(planet);
