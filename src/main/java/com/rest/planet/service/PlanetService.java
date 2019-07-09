@@ -9,8 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class PlanetService {
@@ -22,14 +21,16 @@ public class PlanetService {
     PlanetRepository planetRepository;
 
     public Planet createPlanet(Map bodyMap) throws IOException {
-        bodyMap.put("apparitions", apparitionsService.countApparitionsByPlanet((String) bodyMap.get("nome")));
+        Map newBodyMap = translateFields(bodyMap);
 
-        translateFields(bodyMap);
+        newBodyMap.put("apparitions", apparitionsService.countApparitionsByPlanet((String) newBodyMap.get("name")));
+
 
         Gson gson = new Gson();
-        String json = gson.toJson(bodyMap);
+        String json = gson.toJson(newBodyMap);
 
         ObjectMapper mapper = new ObjectMapper();
+
         Planet planet = mapper.readValue(json, Planet.class);
 
         return planetRepository.save(planet);
@@ -59,18 +60,27 @@ public class PlanetService {
         return planet;
     }
 
-    public void translateFields(Map body){
-        if(body.containsKey("nome")){
-            body.put("name", body.get("nome"));
-            body.remove("nome");
+    public Map translateFields(Map<String, String> body){
+
+        Map newBody = new HashMap();
+
+        for(String key : body.keySet()){
+            newBody.put(key.toLowerCase(), body.get(key));
         }
-        if(body.containsKey("clima")){
-            body.put("climate", body.get("clima"));
-            body.remove("clima");
+
+        if(newBody.containsKey("nome")){
+            newBody.put("name", newBody.get("nome"));
+            newBody.remove("nome");
         }
-        if(body.containsKey("terreno")){
-            body.put("terrain", body.get("terreno"));
-            body.remove("terreno");
+        if(newBody.containsKey("clima")){
+            newBody.put("climate", newBody.get("clima"));
+            newBody.remove("clima");
         }
+        if(newBody.containsKey("terreno")){
+            newBody.put("terrain", newBody.get("terreno"));
+            newBody.remove("terreno");
+        }
+
+        return newBody;
     }
 }

@@ -43,20 +43,20 @@ public class PlanetServiceTest {
     public void translateFields() {
         Map body = new HashMap<String, String>();
         body.put("nome", "Terra");
-        body.put("clima", "Temperado");
+        body.put("Clima", "Temperado");
         body.put("terreno", "Florestal");
 
 
-        planetService.translateFields(body);
+        Map newBody = planetService.translateFields(body);
 
-        System.out.println(body);
+        System.out.println(newBody);
 
-        assertThat(body.get("nome")).isNull();
-        assertThat(body.get("name")).isEqualTo("Terra");
-        assertThat(body.get("clima")).isNull();
-        assertThat(body.get("climate")).isEqualTo("Temperado");
-        assertThat(body.get("terreno")).isNull();
-        assertThat(body.get("terrain")).isEqualTo("Florestal");
+        assertThat(newBody.get("nome")).isNull();
+        assertThat(newBody.get("name")).isEqualTo("Terra");
+        assertThat(newBody.get("clima")).isNull();
+        assertThat(newBody.get("climate")).isEqualTo("Temperado");
+        assertThat(newBody.get("terreno")).isNull();
+        assertThat(newBody.get("terrain")).isEqualTo("Florestal");
     }
 
     @Test
