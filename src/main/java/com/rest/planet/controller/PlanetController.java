@@ -11,6 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +55,9 @@ public class PlanetController {
             return ResponseEntity.status(HttpStatus.OK).body(planetResponse);
         } catch (DuplicateKeyException dke){
             planetResponse.setDescription("Planeta já cadastrado");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(planetResponse);
+        } catch (ConstraintViolationException cve){
+            planetResponse.setDescription(cve.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(planetResponse);
         } catch (Exception e){
             e.printStackTrace();

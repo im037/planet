@@ -23,13 +23,13 @@ public class Planet {
     ObjectId id;
 
     @Indexed(unique = true)
-    @NotNull
+    @NotNull(message = "Nome não pode ser null")
     private String name;
 
-    @NotNull
+    @NotNull(message = "Clima não pode ser null")
     private String climate;
 
-    @NotNull
+    @NotNull(message = "Terreno não pode ser null")
     private String terrain;
 
     private Integer apparitions;
